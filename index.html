@@ -57,9 +57,11 @@ $('#terminal').terminal(function(command, term) {
 	keydown: function(e, term) {
         if (pinging) {
             if (e.which == 67 && e.ctrlKey) { // CTRL+c
+            	term.echo("^C");
             	clearTimeout(timer);
-            	term.set_prompt("\n[[;green;]eagleyuan.com:~ projects$ ]");
+            	term.set_prompt("[[;green;]eagleyuan.com:~ projects$ ]");
             }
+            return false;
         }
     }	
 });
