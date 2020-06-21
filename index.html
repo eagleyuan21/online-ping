@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://unpkg.com/jquery.terminal/js/jquery.terminal.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/jquery.terminal/css/jquery.terminal.min.css"/>
+<script src="dist/ping.js"></script>
+<script src="dist/ping.min.js"></script>
+</head>
+<body>
+
+<div id="terminal"></div>
+
+<script>
+
+var output = "";
+var p = new Ping();
+var timer;
+var stop, pinging;
+$('#terminal').terminal(function(command, term) {
+		var cmd = $.terminal.parse_command(command);
+		var ad = cmd.args[0];
+		console.log(cmd.name);
+		if (cmd.name == 'ping' && ad != undefined) {
+            var i = 0;
+            stop = false;
+            pinging = true;
+            (function loop() {
+                p.ping(ad, function(err, data) {
+  					// Also display error if err is returned.
+  					if (err) {
+    					output = "ping to " + ad + ": ping_seq=" + i + " time=" + "Timeout";
+  					}
+  					else{
+  						output = "ping to " + ad + ": ping_seq=" + i + " time=" + data + " ms";
+  					}
+				});
+				term.echo(output);
+				i++;
+				term.set_prompt("");
+				timer = setTimeout(loop, 1500);
+            })();
+        }
+        else if (cmd.name == 'ping' && ad == undefined) {
+    		term.echo("No address included");
+        }
+        else if (cmd.name){
+        	term.echo(cmd.name + ": command not found");
+        }
+	}, 
+	
+	{
+    greetings: 'Eagle\'s Ping \n',
+    width: 600,
+    height: 350,
+	prompt: "[[;green;]eagleyuan.com:~ projects$ ]",
+	keydown: function(e, term) {
+        if (pinging) {
+            if (e.which == 67 && e.ctrlKey) { // CTRL+c
+            	clearTimeout(timer);
+            	term.set_prompt("\n[[;green;]eagleyuan.com:~ projects$ ]");
+            }
+        }
+    }	
+});
+
+</script>
+
+</body>
+</html>
