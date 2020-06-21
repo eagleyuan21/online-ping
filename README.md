@@ -1,6 +1,6 @@
 # online-ping
 
-This is a program built using both jquery terminal plugin and ping.js. The link to the terminal plugin is https://terminal.jcubic.pl and the link to the ping.js is https://github.com/alfg/ping.js/.
+This is a program built using both jquery terminal plugin and ping.js. The link to the terminal plugin is https://terminal.jcubic.pl and the link to the ping.js is https://github.com/alfg/ping.js/. The application is deployed at https://www.eagleyuan.com/projects
 
 Some of the features of this ping program include pinging addresses and reporting data responses. This data includes total pings, successful pings, percent loss, time in milliseconds reporting for each ping sequence, minimum value reporting after program ends, maximum value, average, and standard deviation.
 
