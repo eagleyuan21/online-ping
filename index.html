@@ -4,25 +4,23 @@
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script src="https://unpkg.com/jquery.terminal/js/jquery.terminal.min.js"></script>
 <link rel="stylesheet" href="https://unpkg.com/jquery.terminal/css/jquery.terminal.min.css"/>
-<script src="dist/ping.js"></script>
-<script src="dist/ping.min.js"></script>
+<script src="ping.js"></script>
 </head>
 <body>
 
 <div id="terminal"></div>
 
 <script>
-
+var p = new Ping();
 var timer;
 var pinging;
 $('#terminal').terminal(function(command, term) {
 		var cmd = $.terminal.parse_command(command);
 		var ad = cmd.args[0];
-		console.log(cmd.name);
 		if (cmd.name == 'ping' && ad != undefined) {
             var i = 0;
             var output = "";
-            var p = new Ping();
+            p = new Ping();
             pinging = true;
             (function loop() {
                 p.ping(ad, function(err, data) {
@@ -34,10 +32,16 @@ $('#terminal').terminal(function(command, term) {
   						output = "ping to " + ad + ": ping_seq=" + i + " time=" + data + " ms";
   					}
 				});
-				term.echo(output);
-				i++;
+				
+				if(output)
+				{
+					term.echo(output);
+					i++;
+				}
+				
 				term.set_prompt("");
-				timer = setTimeout(loop, 1500);
+				p = new Ping();
+				timer = setTimeout(loop, 1000);
             })();
         }
         else if (cmd.name == 'ping' && ad == undefined) {
