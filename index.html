@@ -13,22 +13,21 @@
 
 <script>
 
-var output = "";
-var p = new Ping();
 var timer;
-var stop, pinging;
+var pinging;
 $('#terminal').terminal(function(command, term) {
 		var cmd = $.terminal.parse_command(command);
 		var ad = cmd.args[0];
 		console.log(cmd.name);
 		if (cmd.name == 'ping' && ad != undefined) {
             var i = 0;
-            stop = false;
+            var output = "";
+            var p = new Ping();
             pinging = true;
             (function loop() {
                 p.ping(ad, function(err, data) {
   					// Also display error if err is returned.
-  					if (err) {
+  					if (err || data >= 1500) {
     					output = "ping to " + ad + ": ping_seq=" + i + " time=" + "Timeout";
   					}
   					else{
@@ -47,8 +46,7 @@ $('#terminal').terminal(function(command, term) {
         else if (cmd.name){
         	term.echo(cmd.name + ": command not found");
         }
-	}, 
-	
+	}, 	
 	{
     greetings: 'Eagle\'s Ping \n',
     width: 600,
@@ -59,6 +57,7 @@ $('#terminal').terminal(function(command, term) {
             if (e.which == 67 && e.ctrlKey) { // CTRL+c
             	term.echo("^C");
             	clearTimeout(timer);
+            	pinging = false;
             	term.set_prompt("[[;green;]eagleyuan.com:~ projects$ ]");
             }
             return false;
